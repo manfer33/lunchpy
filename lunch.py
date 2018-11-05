@@ -69,13 +69,31 @@ def button(bot, update):
         update_info()
 
     if len(week[query.data])>1:
-        output = "{}\n{}\n{}\n{}".format(date,week[query.data][0],week[query.data][1],week[query.data][2])
+        output = "{}\n{}\n{}\n{}\n{}".format(date,query.data.upper(),week[query.data][0],week[query.data][1],week[query.data][2])
     else:
-        output = "{}\n{}".format(date,week[query.data][0])
+        output = "{}\n{}\n{}".format(date,query.data.upper(),week[query.data][0])
 
     bot.edit_message_text(text=output,
                           chat_id=query.message.chat_id,
                           message_id=query.message.message_id)
+
+def today(bot, update):
+    output = ""
+    week_list = ['lunes','martes','miercoles','jueves','viernes']
+    today = datetime.now()
+
+    if not init < today < end:
+        update_info()
+
+    if today.weekday() > 4:
+            output = "¡Información de la próxima semana a partir del lunes! :D"
+    else:
+        if len(week[week_list[today.weekday()]])>1:
+            output = "{}\n{}\n{}\n{}\n{}".format(date,week_list[today.weekday()].upper(),week[week_list[today.weekday()]][0],week[week_list[today.weekday()]][1],week[week_list[today.weekday()]][2])
+        else:
+            output = "{}\n{}\n{}".format(date,week_list[today.weekday()].upper(),week[week_list[today.weekday()]][0])
+
+    update.message.reply_text(text=output)
 
 def help(bot, update):
     update.message.reply_text("Usa el comando /menu para usar este bot.")
@@ -87,6 +105,7 @@ def error(bot, update, error):
 if __name__ == '__main__':
     updater = Updater(token='TOKEN')
     updater.dispatcher.add_handler(CommandHandler('menu', start))
+    updater.dispatcher.add_handler(CommandHandler('hoy', today))
     updater.dispatcher.add_handler(CallbackQueryHandler(button))
     updater.dispatcher.add_handler(CommandHandler('help', help))
     updater.dispatcher.add_error_handler(error)
