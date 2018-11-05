@@ -47,7 +47,8 @@ def update_info():
             if no_serv:
                 week[day] = [no_serv.contents[0]].encode("utf-8")
             else:
-                week[day] = map(lambda list: list.replace('*','').encode('utf-8'), [td[0].contents[0], td[1].contents[0], td[2].contents[0]])
+                week[day] = map(lambda list: str(list.encode('utf-8'))[4:-5].replace('*','').split("<br/>"), [td[0], td[1], td[2]])
+                week[day][0].pop(),week[day][1].pop(),week[day][2].pop()
 
 def start(bot, update):
     keyboard = [[InlineKeyboardButton("Lunes", callback_data='lunes'),
@@ -69,7 +70,11 @@ def button(bot, update):
         update_info()
 
     if len(week[query.data])>1:
-        output = "{}\n{}\n{}\n{}\n{}".format(date,query.data.upper(),week[query.data][0],week[query.data][1],week[query.data][2])
+        o0 = '\n'.join('{}'.format(k) for k in (week[query.data][0]))
+        o1 = '\n'.join('{}'.format(k) for k in (week[query.data][1]))
+        o2 = '\n'.join('{}'.format(k) for k in (week[query.data][2]))
+
+        output = "{}\n{}\nPrimero\n{}\nSegundo\n{}\nPostre\n{}".format(date,query.data.upper(),o0,o1,o2)
     else:
         output = "{}\n{}\n{}".format(date,query.data.upper(),week[query.data][0])
 
@@ -89,7 +94,12 @@ def today(bot, update):
             output = "¡Información de la próxima semana a partir del lunes! :D"
     else:
         if len(week[week_list[today.weekday()]])>1:
-            output = "{}\n{}\n{}\n{}\n{}".format(date,week_list[today.weekday()].upper(),week[week_list[today.weekday()]][0],week[week_list[today.weekday()]][1],week[week_list[today.weekday()]][2])
+
+            o0 = '\n'.join('{}'.format(k) for k in (week[week_list[today.weekday()]][0]))
+            o1 = '\n'.join('{}'.format(k) for k in (week[week_list[today.weekday()]][1]))
+            o2 = '\n'.join('{}'.format(k) for k in (week[week_list[today.weekday()]][2]))
+
+            output = "{}\n{}\nPrimero\n{}\nSegundo\n{}\nPostre\n{}".format(date,week_list[today.weekday()].upper(),o0,o1,o2)
         else:
             output = "{}\n{}\n{}".format(date,week_list[today.weekday()].upper(),week[week_list[today.weekday()]][0])
 
