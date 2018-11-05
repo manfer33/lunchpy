@@ -96,7 +96,7 @@ def today(bot, update):
     update.message.reply_text(text=output)
 
 def help(bot, update):
-    update.message.reply_text("Usa el comando /menu para usar este bot.")
+    update.message.reply_text("Usa /hoy para ver el menú del día y /menu para consultar el resto de la semana.")
 
 def error(bot, update, error):
     """Log Errors caused by Updates."""
